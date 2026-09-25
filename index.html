@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>跳表 vs Treap 查询性能对比</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>跳表 vs 平衡树（Treap）查询性能对比</h1>
+    <p class="sub">Web Worker 计算 · Canvas 渲染 · PerformanceObserver 计时 · IndexedDB 持久化</p>
+  </header>
+
+  <section class="panel controls">
+    <label>输入模式
+      <select id="mode">
+        <option value="random">随机数据（含重复键）</option>
+        <option value="sorted">有序数据</option>
+        <option value="reversed">逆序数据</option>
+      </select>
+    </label>
+    <label>数据量 N <input id="n" type="number" value="100000" min="1000" max="2000000" step="1000"></label>
+    <label>删除次数 <input id="deletes" type="number" value="10000" min="0"></label>
+    <label>点查次数 <input id="pointQ" type="number" value="20000" min="0"></label>
+    <label>范围查询次数 <input id="rangeQ" type="number" value="2000" min="0"></label>
+    <label>范围长度 <input id="rangeLen" type="number" value="100" min="1"></label>
+    <button id="runBtn" class="primary">运行对比</button>
+    <button id="stopBtn" disabled>停止</button>
+  </section>
+
+  <section class="panel status-panel">
+    <div id="status">就绪。所有计算在 Web Worker 中执行，主线程只负责渲染。</div>
+    <div class="badges">
+      <span id="consistencyBadge" class="badge">一致性：未验证</span>
+      <span id="longtaskBadge" class="badge">主线程长任务：0</span>
+      <span id="poBadge" class="badge">PerformanceObserver 条目：0</span>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>指标对比</h2>
+    <table id="metricsTable">
+      <thead>
+        <tr><th>指标</th><th class="sl">跳表 SkipList</th><th class="tp">Treap</th></tr>
+      </thead>
+      <tbody><tr><td colspan="3" class="empty">尚未运行</td></tr></tbody>
+    </table>
+  </section>
+
+  <section class="panel">
+    <h2>各阶段耗时（ms，越低越好）</h2>
+    <canvas id="timingChart" width="920" height="320"></canvas>
+  </section>
+
+  <section class="panel viz-grid">
+    <div>
+      <h2>跳表形态（抽样塔高，颜色越亮层数越高）</h2>
+      <canvas id="slCanvas" width="440" height="300"></canvas>
+    </div>
+    <div>
+      <h2>Treap 形态（顶部 9 层抽样）</h2>
+      <canvas id="tpCanvas" width="440" height="300"></canvas>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>层数 / 深度分布（跳表：每级节点数；Treap：每深度节点数）</h2>
+    <canvas id="distChart" width="920" height="280"></canvas>
+  </section>
+
+  <section class="panel">
+    <h2>历史记录（IndexedDB，点击可回看）</h2>
+    <ul id="history"><li class="empty">暂无记录</li></ul>
+  </section>
+
+  <script src="main.js"></script>
+</body>
+</html>
